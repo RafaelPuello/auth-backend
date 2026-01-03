@@ -23,6 +23,10 @@ RUN set -ex && apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /home/web/code
 RUN chown -R web:web /home/web/code
 
+# Create static directory and set permissions
+RUN mkdir -p /home/web/code/static \
+    && chown -R web:web /home/web/code/static
+
 # Switch to the non-root user
 USER web
 
