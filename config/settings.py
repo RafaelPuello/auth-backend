@@ -44,12 +44,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # Django Allauth
-    "allauth",
-    "allauth.account",
+    'allauth',
+    'allauth.account',
     'allauth.headless',
-    #'allauth.socialaccount',
-    #'allauth.mfa',
+    'allauth.socialaccount',
+    'allauth.mfa',
     'allauth.usersessions',
+
+    'identity',
 ]
 
 MIDDLEWARE = [
@@ -136,6 +138,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+AUTH_USER_MODEL = 'identity.User'
 
 # Allauth settings
 
