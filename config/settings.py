@@ -140,9 +140,8 @@ STATIC_URL = 'static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static/'),
-]
+if not os.path.exists(STATIC_ROOT):
+    os.makedirs(STATIC_ROOT, exist_ok=True)
 
 AUTH_USER_MODEL = 'identity.User'
 
