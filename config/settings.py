@@ -42,6 +42,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # Ninja API
+    'ninja',
+    'ninja_extra',
+    'ninja_jwt',
+
     # Django Allauth
     'allauth',
     'allauth.account',
