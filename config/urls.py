@@ -20,7 +20,7 @@ from django.urls import path, include
 from .api import api_router
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    #path('admin/', admin.site.urls),
     path("api/", api_router.urls),
     path('accounts/', include('allauth.urls')),
     path("_allauth/", include('allauth.headless.urls')),
