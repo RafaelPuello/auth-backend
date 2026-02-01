@@ -43,9 +43,6 @@ USER root
 RUN chmod +x /usr/local/bin/entrypoint.sh
 USER web
 
-# Expose the necessary port
-EXPOSE 8000
-
 #ENTRYPOINT ["entrypoint.sh"]
 
 
