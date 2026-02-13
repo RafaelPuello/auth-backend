@@ -7,8 +7,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PIP_NO_CACHE_DIR=1
 
 # Create a user to avoid running containers as root in production
-RUN addgroup --system web \
-    && adduser --system --ingroup web --home /home/web web \
+RUN addgroup --system --gid 1000 web \
+    && adduser --system --ingroup web --uid 1000 --home /home/web web \
     && chown -R web:web /home/web
 
 # Install os-level dependencies (as root)
