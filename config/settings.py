@@ -165,7 +165,7 @@ HEADLESS_JWT_ALGORITHM = "RS256"
 
 # Load from env/secrets in production
 HEADLESS_JWT_PRIVATE_KEY = Path(
-    os.environ["HEADLESS_JWT_PRIVATE_KEY"]
+    os.environ.get("JWT_PRIVATE_KEY", "/run/secrets/jwt_private_key")
 ).read_text().strip()
 
 HEADLESS_JWT_ACCESS_TOKEN_EXPIRES_IN = 300  # 5 min
