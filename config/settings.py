@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
 
     # Ninja API
     'ninja_extra',
@@ -158,6 +159,7 @@ ACCOUNT_EMAIL_VERIFICATION = 'none'
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 
 HEADLESS_ONLY = True
+"""
 HEADLESS_TOKEN_STRATEGY = "allauth.headless.contrib.ninja.token_strategy.JWTTokenStrategy"
 
 # Use asymmetric keys so the CMS can validate without the private key
@@ -176,14 +178,13 @@ HEADLESS_JWT_ROTATE_REFRESH_TOKEN = True
 SESSION_COOKIE_DOMAIN = ".digidex.bio"
 CSRF_COOKIE_DOMAIN = ".digidex.bio"
 
-
 CORS_ALLOWED_ORIGINS = [
     "https://digidex.bio",
     "https://www.digidex.bio",
     "https://id.digidex.bio",
 ]
 CORS_ALLOW_CREDENTIALS = True
-
+"""
 MFA_SUPPORTED_TYPES = ["totp", "recovery_codes", "webauthn"]
 MFA_PASSKEY_LOGIN_ENABLED = True
 MFA_PASSKEY_SIGNUP_ENABLED = False
