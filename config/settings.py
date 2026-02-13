@@ -164,7 +164,9 @@ HEADLESS_TOKEN_STRATEGY = "allauth.headless.contrib.ninja.token_strategy.JWTToke
 HEADLESS_JWT_ALGORITHM = "RS256"
 
 # Load from env/secrets in production
-HEADLESS_JWT_PRIVATE_KEY = os.environ.get("HEADLESS_JWT_PRIVATE_KEY", "").replace("\\n", "\n")
+HEADLESS_JWT_PRIVATE_KEY = Path(
+    os.environ["HEADLESS_JWT_PRIVATE_KEY"]
+).read_text().strip()
 
 HEADLESS_JWT_ACCESS_TOKEN_EXPIRES_IN = 300  # 5 min
 HEADLESS_JWT_REFRESH_TOKEN_EXPIRES_IN = 86400  # 24 hrs
