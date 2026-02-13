@@ -43,9 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # Ninja API
-    'ninja',
     'ninja_extra',
-    'ninja_jwt',
 
     # Django Allauth
     'allauth',
@@ -160,6 +158,29 @@ ACCOUNT_EMAIL_VERIFICATION = 'none'
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 
 HEADLESS_ONLY = True
+HEADLESS_TOKEN_STRATEGY = "allauth.headless.contrib.ninja.token_strategy.JWTTokenStrategy"
+
+# Use asymmetric keys so the CMS can validate without the private key
+HEADLESS_JWT_ALGORITHM = "RS256"
+
+# Load from env/secrets in production
+HEADLESS_JWT_PRIVATE_KEY = os.environ.get("HEADLESS_JWT_PRIVATE_KEY", "").replace("\\n", "\n")
+
+HEADLESS_JWT_ACCESS_TOKEN_EXPIRES_IN = 300  # 5 min
+HEADLESS_JWT_REFRESH_TOKEN_EXPIRES_IN = 86400  # 24 hrs
+HEADLESS_JWT_ROTATE_REFRESH_TOKEN = True
+
+# Cookie settings for cross-subdomain sharing
+SESSION_COOKIE_DOMAIN = ".digidex.bio"
+CSRF_COOKIE_DOMAIN = ".digidex.bio"
+
+
+CORS_ALLOWED_ORIGINS = [
+    "https://digidex.bio",
+    "https://www.digidex.bio",
+    "https://id.digidex.bio",
+]
+CORS_ALLOW_CREDENTIALS = True
 
 MFA_SUPPORTED_TYPES = ["totp", "recovery_codes", "webauthn"]
 MFA_PASSKEY_LOGIN_ENABLED = True
