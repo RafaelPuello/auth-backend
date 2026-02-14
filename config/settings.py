@@ -159,32 +159,47 @@ ACCOUNT_EMAIL_VERIFICATION = 'none'
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 
 HEADLESS_ONLY = True
-"""
-HEADLESS_TOKEN_STRATEGY = "allauth.headless.contrib.ninja.token_strategy.JWTTokenStrategy"
 
-# Use asymmetric keys so the CMS can validate without the private key
+# JWT Token Strategy Configuration
+# Use asymmetric keys (RS256) so other services can validate tokens without the private key
+HEADLESS_TOKEN_STRATEGY = "allauth.headless.contrib.ninja.token_strategy.JWTTokenStrategy"
 HEADLESS_JWT_ALGORITHM = "RS256"
 
-# Load from env/secrets in production
-HEADLESS_JWT_PRIVATE_KEY = Path(
-    os.environ.get("JWT_PRIVATE_KEY", "/run/secrets/jwt_private_key")
-).read_text().strip()
+# Load keys from environment or files
+# In development: uses local files in config/keys/
+# In production: loads from environment variables or secrets management
+_jwt_private_key_path = os.environ.get(
+    "JWT_PRIVATE_KEY_PATH",
+    BASE_DIR / "config" / "keys" / "jwt_private_key.pem"
+)
+_jwt_public_key_path = os.environ.get(
+    "JWT_PUBLIC_KEY_PATH",
+    BASE_DIR / "config" / "keys" / "jwt_public_key.pem"
+)
 
-HEADLESS_JWT_ACCESS_TOKEN_EXPIRES_IN = 300  # 5 min
-HEADLESS_JWT_REFRESH_TOKEN_EXPIRES_IN = 86400  # 24 hrs
+HEADLESS_JWT_PRIVATE_KEY = Path(_jwt_private_key_path).read_text().strip()
+HEADLESS_JWT_PUBLIC_KEY = Path(_jwt_public_key_path).read_text().strip()
+
+# Token expiration times
+HEADLESS_JWT_ACCESS_TOKEN_EXPIRES_IN = 300  # 5 minutes
+HEADLESS_JWT_REFRESH_TOKEN_EXPIRES_IN = 86400  # 24 hours
 HEADLESS_JWT_ROTATE_REFRESH_TOKEN = True
 
-# Cookie settings for cross-subdomain sharing
+# Cookie settings for cross-subdomain sharing (kept for session compatibility)
 SESSION_COOKIE_DOMAIN = ".digidex.bio"
 CSRF_COOKIE_DOMAIN = ".digidex.bio"
+SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_HTTPONLY = True
 
+# CORS configuration for API access
 CORS_ALLOWED_ORIGINS = [
     "https://digidex.bio",
     "https://www.digidex.bio",
     "https://id.digidex.bio",
+    "http://localhost:3000",  # Development
+    "http://localhost:5173",  # Development
 ]
 CORS_ALLOW_CREDENTIALS = True
-"""
 MFA_SUPPORTED_TYPES = ["totp", "recovery_codes", "webauthn"]
 MFA_PASSKEY_LOGIN_ENABLED = True
 MFA_PASSKEY_SIGNUP_ENABLED = False
