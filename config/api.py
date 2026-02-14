@@ -1,5 +1,5 @@
 from ninja_extra import NinjaExtraAPI
-from allauth.headless.contrib.ninja.security import jwt_token_auth, x_session_token_auth
+from allauth.headless.contrib.ninja.security import jwt_token_auth
 
 api_router = NinjaExtraAPI(
     title="DigiDex Auth API",
@@ -8,11 +8,11 @@ api_router = NinjaExtraAPI(
 )
 
 
-@api_router.get("/me", auth=[jwt_token_auth, x_session_token_auth])
+@api_router.get("/me", auth=jwt_token_auth)
 def get_current_user(request):
     """
     Get current authenticated user information.
-    Supports both JWT and session token authentication for compatibility.
+    Requires JWT token sent via Authorization: Bearer <token> header.
 
     Returns:
         - id: User primary key

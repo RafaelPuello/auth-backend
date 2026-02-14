@@ -87,11 +87,13 @@ class JWTAuthenticationTests(TestCase):
         """Verify refresh token rotation is enabled for security."""
         self.assertTrue(settings.HEADLESS_JWT_ROTATE_REFRESH_TOKEN)
 
-    def test_session_security_configured(self):
-        """Verify session cookies are secure even during transition."""
-        self.assertEqual(settings.SESSION_COOKIE_DOMAIN, '.digidex.bio')
-        self.assertTrue(settings.SESSION_COOKIE_SECURE)
-        self.assertTrue(settings.SESSION_COOKIE_HTTPONLY)
+    def test_jwt_only_no_sessions(self):
+        """Verify application is JWT-only with sessions in signed cookies (no DB persistence)."""
+        # JWT-only applications use signed cookie sessions (no database persistence)
+        # This prevents 409 Conflict errors from django-allauth login endpoint
+        self.assertEqual(settings.SESSION_ENGINE, 'django.contrib.sessions.backends.signed_cookies')
+        # Session middleware required for AuthenticationMiddleware
+        self.assertIn('django.contrib.sessions.middleware.SessionMiddleware', settings.MIDDLEWARE)
 
     def test_mfa_types_supported(self):
         """Verify MFA types are available for JWT auth."""

@@ -35,11 +35,9 @@ ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost").split(",")
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
 
@@ -65,7 +63,6 @@ MIDDLEWARE = [
     # CSRF middleware removed - JWT authentication is inherently CSRF-safe
     # (tokens sent in Authorization header, not cookies)
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "allauth.account.middleware.AccountMiddleware",
 ]
@@ -88,7 +85,6 @@ TEMPLATES = [
             'context_processors': [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
             ],
         },
     },
@@ -192,16 +188,9 @@ HEADLESS_JWT_ROTATE_REFRESH_TOKEN = True
 CSRF_COOKIE_SECURE = False  # Don't rely on CSRF cookies
 CSRF_COOKIE_HTTPONLY = False  # Not using CSRF cookies for JWT auth
 
-# Session cookies (kept for backward compatibility if sessions are used)
-if DEBUG:
-    SESSION_COOKIE_DOMAIN = None
-    SESSION_COOKIE_SECURE = False
-else:
-    # Production: restrict to main domain
-    SESSION_COOKIE_DOMAIN = ".digidex.bio"
-    SESSION_COOKIE_SECURE = True
-
-SESSION_COOKIE_HTTPONLY = True
+# JWT-only authentication - sessions stored in signed cookies (no database persistence)
+# This prevents 409 Conflict from django-allauth when sessions exist in DB
+SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 
 # CORS configuration for API access
 CORS_ALLOWED_ORIGINS = [
