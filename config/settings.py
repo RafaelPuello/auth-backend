@@ -29,7 +29,7 @@ SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DJANGO_DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost").split(",")
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost,testserver").split(",")
 
 
 # Application definition
@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     'allauth.headless',
     'allauth.socialaccount',
     'allauth.mfa',
-    'allauth.usersessions',
+    # 'allauth.usersessions',  # Disabled - incompatible with signed_cookies sessions
 
     'identity',
 ]
@@ -204,3 +204,6 @@ CORS_ALLOW_CREDENTIALS = True
 MFA_SUPPORTED_TYPES = ["totp", "recovery_codes", "webauthn"]
 MFA_PASSKEY_LOGIN_ENABLED = True
 MFA_PASSKEY_SIGNUP_ENABLED = False
+
+# User sessions tracking disabled - using JWT tokens for auth state instead
+USERSESSIONS_TRACK_ACTIVITY = False
