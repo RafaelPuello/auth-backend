@@ -58,6 +58,9 @@ COPY --chown=web:web requirements-dev.txt .
 RUN pip install --no-cache-dir -r requirements-dev.txt
 USER web
 
+# Copy the source code for development
+COPY --chown=web:web . ./
+
 # Copy the scripts that starts the development application server (runserver)
 COPY --chown=web:web start-dev-server.sh /usr/local/bin
 USER root
