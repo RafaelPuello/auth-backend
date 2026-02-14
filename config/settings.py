@@ -186,9 +186,17 @@ HEADLESS_JWT_REFRESH_TOKEN_EXPIRES_IN = 86400  # 24 hours
 HEADLESS_JWT_ROTATE_REFRESH_TOKEN = True
 
 # Cookie settings for cross-subdomain sharing (kept for session compatibility)
-SESSION_COOKIE_DOMAIN = ".digidex.bio"
-CSRF_COOKIE_DOMAIN = ".digidex.bio"
-SESSION_COOKIE_SECURE = True
+# In development, don't restrict domain to allow localhost/IP access
+if DEBUG:
+    SESSION_COOKIE_DOMAIN = None
+    CSRF_COOKIE_DOMAIN = None
+    SESSION_COOKIE_SECURE = False
+else:
+    # Production: restrict to main domain
+    SESSION_COOKIE_DOMAIN = ".digidex.bio"
+    CSRF_COOKIE_DOMAIN = ".digidex.bio"
+    SESSION_COOKIE_SECURE = True
+
 SESSION_COOKIE_HTTPONLY = True
 
 # CORS configuration for API access
