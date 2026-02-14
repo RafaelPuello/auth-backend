@@ -62,7 +62,8 @@ MIDDLEWARE = [
     "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # CSRF middleware removed - JWT authentication is inherently CSRF-safe
+    # (tokens sent in Authorization header, not cookies)
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -185,16 +186,19 @@ HEADLESS_JWT_ACCESS_TOKEN_EXPIRES_IN = 300  # 5 minutes
 HEADLESS_JWT_REFRESH_TOKEN_EXPIRES_IN = 86400  # 24 hours
 HEADLESS_JWT_ROTATE_REFRESH_TOKEN = True
 
-# Cookie settings for cross-subdomain sharing (kept for session compatibility)
-# In development, don't restrict domain to allow localhost/IP access
+# Cookie settings for JWT-based authentication
+# CSRF protection is no longer needed - JWT tokens are sent in Authorization header
+# which is inherently CSRF-safe (not vulnerable to cross-site request forgery)
+CSRF_COOKIE_SECURE = False  # Don't rely on CSRF cookies
+CSRF_COOKIE_HTTPONLY = False  # Not using CSRF cookies for JWT auth
+
+# Session cookies (kept for backward compatibility if sessions are used)
 if DEBUG:
     SESSION_COOKIE_DOMAIN = None
-    CSRF_COOKIE_DOMAIN = None
     SESSION_COOKIE_SECURE = False
 else:
     # Production: restrict to main domain
     SESSION_COOKIE_DOMAIN = ".digidex.bio"
-    CSRF_COOKIE_DOMAIN = ".digidex.bio"
     SESSION_COOKIE_SECURE = True
 
 SESSION_COOKIE_HTTPONLY = True
