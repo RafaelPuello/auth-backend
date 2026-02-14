@@ -30,7 +30,7 @@ def get_current_user(request):
     }
 
 
-@api_router.get("/health", auth=[])
+@api_router.get("/health", auth=None)
 def health_check(request):
     """
     Health check endpoint (no authentication required).
