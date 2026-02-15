@@ -197,8 +197,9 @@ CORS_ALLOWED_ORIGINS = [
     "https://digidex.bio",
     "https://www.digidex.bio",
     "https://id.digidex.bio",
-    "http://localhost:3000",  # Development
-    "http://localhost:5173",  # Development
+    "https://app.digidex.bio",  # App service frontend
+    "http://localhost:3000",  # Development (app frontend)
+    "http://localhost:5173",  # Development (id frontend)
 ]
 CORS_ALLOW_CREDENTIALS = True
 MFA_SUPPORTED_TYPES = ["totp", "recovery_codes", "webauthn"]
