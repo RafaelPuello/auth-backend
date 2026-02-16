@@ -58,10 +58,13 @@ python manage.py shell            # Django shell for manual testing
 
 **Django Allauth Headless URLs**
 - `/accounts/` - Standard allauth URLs
-- `/_allauth/browser/v1/*` - Headless API endpoints for auth flows
-  - `/login/`, `/logout/`, `/signup/`, `/token/refresh/`
-  - `/mfa/authenticate/`, `/mfa/totp/`, `/mfa/webauthn/`
+- `/_allauth/app/v1/*` - Headless API endpoints for auth flows (app client only)
+  - `/auth/login`, `/auth/signup`, `/auth/token`, `/auth/session`
+  - `/auth/2fa/authenticate`, `/auth/webauthn/authenticate`
+  - `/account/authenticators/totp`, `/account/authenticators/webauthn`
+  - `/account/password/change`, `/account/email`
   - `/config` - Runtime configuration for frontend
+- Note: Browser client endpoints (`/_allauth/browser/v1/*`) are disabled via `HEADLESS_CLIENTS = ["app"]`
 
 ### Database Models
 

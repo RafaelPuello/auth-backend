@@ -57,7 +57,7 @@ class JWTAuthenticationTests(TestCase):
         """Verify JWT token strategy is enabled."""
         self.assertEqual(
             settings.HEADLESS_TOKEN_STRATEGY,
-            'allauth.headless.contrib.ninja.token_strategy.JWTTokenStrategy'
+            'allauth.headless.tokens.strategies.jwt.JWTTokenStrategy'
         )
 
     def test_api_me_endpoint_exists(self):
@@ -69,6 +69,10 @@ class JWTAuthenticationTests(TestCase):
     def test_headless_only_mode(self):
         """Verify HEADLESS_ONLY is enabled (no server-rendered auth pages)."""
         self.assertTrue(settings.HEADLESS_ONLY)
+
+    def test_headless_clients_app_only(self):
+        """Verify only app client is enabled (browser client disabled)."""
+        self.assertEqual(settings.HEADLESS_CLIENTS, ["app"])
 
     def test_cors_configured(self):
         """Verify CORS is configured for development and production."""

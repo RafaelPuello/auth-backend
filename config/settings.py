@@ -157,9 +157,13 @@ ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 
 HEADLESS_ONLY = True
 
+# Enable only app client (JWT-based authentication)
+# Disables browser client endpoints (/_allauth/browser/v1/*)
+HEADLESS_CLIENTS = ["app"]
+
 # JWT Token Strategy Configuration
 # Use asymmetric keys (RS256) so other services can validate tokens without the private key
-HEADLESS_TOKEN_STRATEGY = "allauth.headless.contrib.ninja.token_strategy.JWTTokenStrategy"
+HEADLESS_TOKEN_STRATEGY = "allauth.headless.tokens.strategies.jwt.JWTTokenStrategy"
 HEADLESS_JWT_ALGORITHM = "RS256"
 
 # Load keys from environment or files
