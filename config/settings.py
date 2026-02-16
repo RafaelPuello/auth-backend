@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
 
+    # CORS headers
+    'corsheaders',
+
     # Ninja API
     'ninja_extra',
 
@@ -58,6 +61,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     "whitenoise.middleware.WhiteNoiseMiddleware",
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     # CSRF middleware removed - JWT authentication is inherently CSRF-safe
@@ -144,16 +148,49 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 AUTH_USER_MODEL = 'identity.User'
 
+# Security settings
+
+# HSTS (HTTP Strict Transport Security) - forces HTTPS for 1 year after first visit
+# In development (DEBUG=True), set to 0 to allow HTTP
+# In production (DEBUG=False), set to 1 year (31536000 seconds)
+SECURE_HSTS_SECONDS = 0 if DEBUG else 31536000
+
+# Prevent MIME-sniffing attacks - browser must respect Content-Type header
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# Enable browser XSS filtering (legacy, but doesn't hurt)
+SECURE_BROWSER_XSS_FILTER = True
+
+# Session cookies only sent over HTTPS in production
+# In development (DEBUG=True), set to False to allow HTTP
+# In production (DEBUG=False), must be True
+SESSION_COOKIE_SECURE = not DEBUG
+
 # Allauth settings
 
 ACCOUNT_ADAPTER = 'identity.adapter.IdentityAdapter'
 ACCOUNT_LOGIN_METHODS = {'email'}
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
-ACCOUNT_EMAIL_VERIFICATION = 'none'
+
+# Email verification - mandatory for production readiness
+# In development, can be 'none' for easier testing
+# In production, should be 'mandatory' to ensure email validity
+ACCOUNT_EMAIL_VERIFICATION = 'none' if DEBUG else 'mandatory'
 #ACCOUNT_EMAIL_VERIFICATION_BY_CODE_ENABLED = True
 #ACCOUNT_EMAIL_UNKNOWN_ACCOUNTS = False
 
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+
+# Rate limiting for authentication endpoints (brute-force protection)
+# Format: "X/Ym" means X attempts per Y minutes
+# Limits are per IP address
+ACCOUNT_RATE_LIMITS = {
+    'login_failed': '5/5m',        # 5 failed login attempts per 5 minutes
+    'manage_email': '5/1h',        # 5 email management operations per hour
+    'reauthenticate': '5/5m',      # 5 re-authentication attempts per 5 minutes
+    'reset_password': '3/15m',     # 3 password reset requests per 15 minutes
+    'change_password': '5/15m',    # 5 password changes per 15 minutes
+}
 
 HEADLESS_ONLY = True
 

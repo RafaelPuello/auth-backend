@@ -141,7 +141,7 @@ class UserModelTests(TestCase):
             password='TestPass123!'
         )
         group = user.get_group()
-        self.assertEqual(group.name, str(user.uuid))
+        self.assertEqual(str(group.name), str(user.uuid))
         self.assertIn(group, user.groups.all())
 
     def test_user_deletion_removes_group(self):

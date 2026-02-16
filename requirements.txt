@@ -8,6 +8,7 @@ cryptography==46.0.3
 dj-database-url==3.0.1
 Django==6.0.2
 django-allauth==65.13.1
+django-cors-headers==4.9.0
 django-ninja==1.5.1
 django-ninja-extra==0.30.8
 django-ninja-jwt==5.4.3

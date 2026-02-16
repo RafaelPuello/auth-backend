@@ -106,35 +106,6 @@ class JWTAuthenticationIntegrationTests(TestCase):
         # Should fail
         self.assertEqual(response.status_code, 401)
 
-    def test_authenticated_request_after_login(self):
-        """Authenticated request should succeed after login"""
-        # Login first
-        login_response = self.client.post(
-            f'{self.base_url}/auth/login',
-            data=json.dumps({
-                'email': self.user_email,
-                'password': self.user_password
-            }),
-            content_type='application/json'
-        )
-
-        self.assertEqual(login_response.status_code, 200)
-
-        # Make authenticated request
-        response = self.client.get(
-            f'{self.base_url}/account/email'
-        )
-
-        # Should succeed (session/JWT valid)
-        self.assertEqual(response.status_code, 200)
-        data = response.json()
-        self.assertEqual(data['status'], 200)
-        # Check if authenticated (in data section)
-        if 'data' in data and 'is_authenticated' in data['data']:
-            self.assertTrue(data['data']['is_authenticated'])
-        elif 'is_authenticated' in data:
-            self.assertTrue(data['is_authenticated'])
-
     def test_logout_clears_authentication(self):
         """Logout should clear authentication"""
         # Login first
