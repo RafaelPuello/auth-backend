@@ -29,7 +29,7 @@ class JWTAuthenticationIntegrationTests(TestCase):
     def setUp(self):
         """Set up test client and user"""
         self.client = Client()
-        self.base_url = '/_allauth/browser/v1'
+        self.base_url = '/_allauth/app/v1'
 
         # Create test user
         self.user_email = 'testuser@example.com'
@@ -248,7 +248,7 @@ class JWTSecurityIntegrationTests(TestCase):
     def setUp(self):
         """Set up test client and user"""
         self.client = Client()
-        self.base_url = '/_allauth/browser/v1'
+        self.base_url = '/_allauth/app/v1'
 
         self.user_email = 'testuser@example.com'
         self.user_password = 'TestPass123!'
@@ -435,7 +435,7 @@ class JWTErrorHandlingIntegrationTests(TestCase):
     def setUp(self):
         """Set up test client"""
         self.client = Client()
-        self.base_url = '/_allauth/browser/v1'
+        self.base_url = '/_allauth/app/v1'
 
         self.user_email = 'testuser@example.com'
         self.user_password = 'TestPass123!'
@@ -546,7 +546,7 @@ class JWTConfigurationValidationTests(TestCase):
         """JWT strategy should be configured"""
         self.assertEqual(
             settings.HEADLESS_TOKEN_STRATEGY,
-            'allauth.headless.contrib.ninja.token_strategy.JWTTokenStrategy'
+            'allauth.headless.tokens.strategies.jwt.JWTTokenStrategy'
         )
 
     def test_jwt_algorithm_is_rs256(self):
