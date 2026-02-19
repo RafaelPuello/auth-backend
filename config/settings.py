@@ -220,7 +220,9 @@ HEADLESS_JWT_PUBLIC_KEY = Path(_jwt_public_key_path).read_text().strip()
 
 # Token expiration times
 HEADLESS_JWT_ACCESS_TOKEN_EXPIRES_IN = 300  # 5 minutes
-HEADLESS_JWT_REFRESH_TOKEN_EXPIRES_IN = 86400  # 24 hours
+HEADLESS_JWT_REFRESH_TOKEN_EXPIRES_IN = int(
+    os.environ.get("JWT_REFRESH_TOKEN_EXPIRES_IN", "1209600")
+)  # 14 days (default), configurable via env var
 HEADLESS_JWT_ROTATE_REFRESH_TOKEN = True
 
 # Cookie settings for JWT-based authentication

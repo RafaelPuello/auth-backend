@@ -100,8 +100,8 @@ class IdentityAdapter(DefaultAccountAdapter):
 
 **Token Expiration**
 - Access token: 300 seconds (5 minutes)
-- Refresh token: 86400 seconds (24 hours)
-- Rotate refresh token: Enabled (new refresh token issued on each use)
+- Refresh token: 1209600 seconds (14 days) - configurable via `JWT_REFRESH_TOKEN_EXPIRES_IN` env var
+- Rotate refresh token: Enabled (new refresh token issued on each use, effectively infinite session while active)
 
 ## Testing
 
@@ -128,6 +128,7 @@ class IdentityAdapter(DefaultAccountAdapter):
 - `DJANGO_ALLOWED_HOSTS` - Comma-separated list (default: "localhost,testserver")
 - `JWT_PRIVATE_KEY_PATH` - Path to JWT private key (default: `config/keys/jwt_private_key.pem`)
 - `JWT_PUBLIC_KEY_PATH` - Path to JWT public key (default: `config/keys/jwt_public_key.pem`)
+- `JWT_REFRESH_TOKEN_EXPIRES_IN` - Refresh token lifetime in seconds (default: "1209600" = 14 days)
 
 ### Development
 - `.env.dev` file in `backend/` directory sets development variables
