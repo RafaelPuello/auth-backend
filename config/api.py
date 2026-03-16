@@ -19,6 +19,10 @@ def get_current_user(request):
         - email: User email address
         - uuid: User UUID (for JWT claims)
         - is_authenticated: Boolean authentication status
+        - first_name: User first name
+        - last_name: User last name
+        - methods: List of authentication methods (empty for JWT stateless auth)
+        - flows: List of pending authentication flows (empty for JWT stateless auth)
     """
     return {
         "id": request.user.pk,
@@ -27,6 +31,8 @@ def get_current_user(request):
         "is_authenticated": request.user.is_authenticated,
         "first_name": request.user.first_name,
         "last_name": request.user.last_name,
+        "methods": [],
+        "flows": [],
     }
 
 

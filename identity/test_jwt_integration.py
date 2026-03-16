@@ -210,6 +210,64 @@ class JWTAuthenticationIntegrationTests(TestCase):
         self.assertEqual(login_response.status_code, 200)
         self.assertTrue(login_response.json()['meta']['is_authenticated'])
 
+    def test_me_endpoint_includes_methods_and_flows(self):
+        """Me endpoint response must include methods and flows fields."""
+        # Login to obtain a valid JWT access token
+        login_response = self.client.post(
+            f'{self.base_url}/auth/login',
+            data=json.dumps({
+                'email': self.user_email,
+                'password': self.user_password
+            }),
+            content_type='application/json'
+        )
+        self.assertEqual(login_response.status_code, 200)
+        access_token = login_response.json()['meta']['access_token']
+
+        # Call /api/me with the JWT token
+        response = self.client.get(
+            '/api/me',
+            HTTP_AUTHORIZATION=f'Bearer {access_token}'
+        )
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+
+        # Verify methods and flows fields exist and are lists
+        self.assertIn('methods', data)
+        self.assertIsInstance(data['methods'], list)
+        self.assertIn('flows', data)
+        self.assertIsInstance(data['flows'], list)
+
+    def test_me_endpoint_preserves_existing_fields(self):
+        """Me endpoint response must preserve all original fields alongside methods/flows."""
+        login_response = self.client.post(
+            f'{self.base_url}/auth/login',
+            data=json.dumps({
+                'email': self.user_email,
+                'password': self.user_password
+            }),
+            content_type='application/json'
+        )
+        self.assertEqual(login_response.status_code, 200)
+        access_token = login_response.json()['meta']['access_token']
+
+        response = self.client.get(
+            '/api/me',
+            HTTP_AUTHORIZATION=f'Bearer {access_token}'
+        )
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+
+        # Verify all original fields still present
+        self.assertIn('id', data)
+        self.assertIn('email', data)
+        self.assertEqual(data['email'], self.user_email)
+        self.assertIn('uuid', data)
+        self.assertIn('is_authenticated', data)
+        self.assertTrue(data['is_authenticated'])
+        self.assertIn('first_name', data)
+        self.assertIn('last_name', data)
+
 
 class JWTSecurityIntegrationTests(TestCase):
     """
