@@ -84,8 +84,8 @@ class JWTAuthenticationTests(TestCase):
         """Verify token expiration times are set correctly."""
         # Access token: 5 minutes
         self.assertEqual(settings.HEADLESS_JWT_ACCESS_TOKEN_EXPIRES_IN, 300)
-        # Refresh token: 24 hours
-        self.assertEqual(settings.HEADLESS_JWT_REFRESH_TOKEN_EXPIRES_IN, 86400)
+        # Refresh token: 14 days
+        self.assertEqual(settings.HEADLESS_JWT_REFRESH_TOKEN_EXPIRES_IN, 1209600)
 
     def test_refresh_token_rotation_enabled(self):
         """Verify refresh token rotation is enabled for security."""

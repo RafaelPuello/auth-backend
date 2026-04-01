@@ -36,7 +36,7 @@ python manage.py shell            # Django shell for manual testing
 ### Authentication Model
 
 **JWT-Based Authentication (Not Session-Based)**
-- Tokens: Access tokens (5 min), Refresh tokens (24 hrs)
+- Tokens: Access tokens (5 min), Refresh tokens (14 days)
 - Algorithm: RS256 (asymmetric) - frontend can validate tokens with public key only
 - Tokens sent via `Authorization: Bearer <token>` header
 - No CSRF protection needed (JWT inherently CSRF-safe)
