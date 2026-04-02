@@ -91,13 +91,27 @@ class JWTAuthenticationTests(TestCase):
         """Verify refresh token rotation is enabled for security."""
         self.assertTrue(settings.HEADLESS_JWT_ROTATE_REFRESH_TOKEN)
 
-    def test_jwt_only_no_sessions(self):
-        """Verify application is JWT-only with sessions in signed cookies (no DB persistence)."""
-        # JWT-only applications use signed cookie sessions (no database persistence)
-        # This prevents 409 Conflict errors from django-allauth login endpoint
-        self.assertEqual(settings.SESSION_ENGINE, 'django.contrib.sessions.backends.signed_cookies')
+    def test_jwt_uses_db_session_backend(self):
+        """Verify application uses database-backed sessions for JWT token refresh compatibility.
+
+        JWT token refresh (validate_refresh_token) calls session_store().exists(session_key)
+        to verify the session. The signed_cookies backend always returns False from exists(),
+        breaking token refresh and causing immediate logout. The db backend stores sessions
+        server-side so exists() works correctly.
+        """
+        self.assertEqual(settings.SESSION_ENGINE, 'django.contrib.sessions.backends.db')
         # Session middleware required for AuthenticationMiddleware
         self.assertIn('django.contrib.sessions.middleware.SessionMiddleware', settings.MIDDLEWARE)
+
+    def test_login_flush_middleware_in_stack(self):
+        """Verify LoginFlushMiddleware is in the middleware stack to prevent 409 Conflict.
+
+        When using db-backed sessions, a previous session may still exist when a user
+        tries to log in again. allauth's LoginView returns 409 Conflict if request.user
+        is already authenticated. The LoginFlushMiddleware flushes the session before
+        the login endpoint to prevent this.
+        """
+        self.assertIn('identity.middleware.LoginFlushMiddleware', settings.MIDDLEWARE)
 
     def test_mfa_types_supported(self):
         """Verify MFA types are available for JWT auth."""

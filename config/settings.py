@@ -66,6 +66,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     # CSRF middleware removed - JWT authentication is inherently CSRF-safe
     # (tokens sent in Authorization header, not cookies)
+    'identity.middleware.LoginFlushMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "allauth.account.middleware.AccountMiddleware",
@@ -231,9 +232,12 @@ HEADLESS_JWT_ROTATE_REFRESH_TOKEN = True
 CSRF_COOKIE_SECURE = False  # Don't rely on CSRF cookies
 CSRF_COOKIE_HTTPONLY = False  # Not using CSRF cookies for JWT auth
 
-# JWT-only authentication - sessions stored in signed cookies (no database persistence)
-# This prevents 409 Conflict from django-allauth when sessions exist in DB
-SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
+# Database-backed sessions required for JWT token refresh compatibility.
+# allauth's validate_refresh_token() calls session_store().exists(session_key) to verify
+# the session. The signed_cookies backend always returns False from exists(), breaking
+# token refresh and causing immediate logout after the access token expires.
+# LoginFlushMiddleware handles the 409 Conflict issue that arises with db-backed sessions.
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
 # CORS configuration for API access
 CORS_ALLOWED_ORIGINS = [

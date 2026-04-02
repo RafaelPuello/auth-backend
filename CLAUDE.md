@@ -40,7 +40,8 @@ python manage.py shell            # Django shell for manual testing
 - Algorithm: RS256 (asymmetric) - frontend can validate tokens with public key only
 - Tokens sent via `Authorization: Bearer <token>` header
 - No CSRF protection needed (JWT inherently CSRF-safe)
-- Sessions stored in signed cookies (not database), via `SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'`
+- Sessions stored in database (`SESSION_ENGINE = 'django.contrib.sessions.backends.db'`) - required for JWT token refresh; allauth's `validate_refresh_token()` calls `session_store().exists(session_key)` which always returns `False` with `signed_cookies`
+- `LoginFlushMiddleware` (`identity/middleware.py`) flushes the session before the login endpoint to prevent allauth's 409 Conflict when a session already exists
 
 **Key Configuration** (`config/settings.py`)
 - `HEADLESS_ONLY = True` - No server-rendered auth pages, API-only
@@ -143,14 +144,18 @@ class IdentityAdapter(DefaultAccountAdapter):
 | `config/api.py` | Ninja API router with `/me` and `/health` endpoints |
 | `identity/models.py` | Custom User model (email-based, UUID field) |
 | `identity/adapter.py` | Allauth account adapter (signup control) |
+| `identity/middleware.py` | LoginFlushMiddleware - flushes session on login to prevent 409 |
 | `identity/tests.py` | Unit tests for authentication |
 | `identity/test_jwt_integration.py` | Integration tests for JWT auth flow |
 | `conftest.py` | Pytest configuration and fixtures |
 
 ## Important Gotchas
 
-### No Sessions in Database
-The service uses `SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'` instead of database-backed sessions. This avoids 409 Conflict errors from django-allauth when dealing with JWT tokens. Sessions are stored entirely in signed cookies.
+### Sessions Must Use Database Backend
+The service uses `SESSION_ENGINE = 'django.contrib.sessions.backends.db'` (the Django default). This is required for JWT token refresh: allauth's `validate_refresh_token()` calls `session_store().exists(session_key)` to verify the session is still valid. The `signed_cookies` backend's `exists()` always returns `False` (no server-side store), causing every token refresh to fail and the user to be logged out after ~5 minutes.
+
+### 409 Conflict Prevention via LoginFlushMiddleware
+Since db-backed sessions persist between requests, allauth's `LoginView` would return 409 Conflict when `request.user.is_authenticated` is True on a new login request. `LoginFlushMiddleware` flushes the session on every POST to `/_allauth/app/v1/auth/login` before `AuthenticationMiddleware` runs, ensuring the user appears unauthenticated and the new login proceeds. The middleware must appear before `AuthenticationMiddleware` in the `MIDDLEWARE` list.
 
 ### Admin Interface Disabled
 `HEADLESS_ONLY = True` means the Django admin interface is disabled and not accessible. All admin tasks must be done via Django shell or scripts.
