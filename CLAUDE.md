@@ -169,6 +169,19 @@ Always use `get_user_model()` or `from django.contrib.auth import get_user_model
 ### JWT Keys Required at Startup
 The service will fail to start if JWT key files are missing. In development, they must exist at `config/keys/jwt_private_key.pem` and `config/keys/jwt_public_key.pem`. In production, set the env vars.
 
+## Architectural Direction: Pure JWT (No Sessions)
+
+**Long-term goal:** Eliminate Django sessions entirely and use pure stateless JWT authentication.
+
+**Current state (interim):** Database-backed sessions (`SESSION_ENGINE = 'django.contrib.sessions.backends.db'`) are required because django-allauth's `validate_refresh_token()` stores and validates refresh token JTIs in `session["headless_refresh_tokens"]` via `session_store().exists(session_key)`. The `LoginFlushMiddleware` prevents 409 Conflict errors that arise from persistent sessions.
+
+**Blocker:** allauth has no built-in session-free refresh token validation. Future work should evaluate:
+1. Custom `JWTTokenStrategy` subclass that validates refresh tokens without sessions
+2. Disabling refresh token rotation (`HEADLESS_JWT_ROTATE_REFRESH_TOKEN = False`)
+3. Upstream contribution to django-allauth for a session-free strategy
+
+**Principle for all auth work:** Always design with pure JWT compatibility in mind. Do not introduce new session dependencies. The frontend is already pure JWT and requires no changes.
+
 ## Deployment Notes
 
 - Database: Uses PostgreSQL in production (via `dj-database-url`)
