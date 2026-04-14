@@ -258,6 +258,8 @@ CORS_ALLOWED_ORIGINS = [
     "https://app.digidex.bio",  # App service frontend
     "http://localhost:3000",  # Development (app frontend)
     "http://localhost:5173",  # Development (id frontend)
+    "http://127.0.0.1:3000",  # Development (app frontend, loopback)
+    "http://127.0.0.1:5173",  # Development (id frontend, loopback)
     "http://digidex.lan",  # Development via digidex.lan
     "http://digidex.lan:10000",  # Development via digidex.lan (Traefik)
 ]
