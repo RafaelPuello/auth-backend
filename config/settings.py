@@ -31,6 +31,17 @@ DEBUG = os.environ.get("DJANGO_DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost,testserver").split(",")
 
+if DEBUG:
+    ALLOWED_HOSTS = [
+        'localhost',
+        '127.0.0.1',
+        '10.0.0.218',
+        'digidex.lan',
+        'api.digidex.lan',
+        'admin.digidex.lan',
+        '*.digidex.lan',
+    ]
+
 
 # Application definition
 
@@ -247,6 +258,8 @@ CORS_ALLOWED_ORIGINS = [
     "https://app.digidex.bio",  # App service frontend
     "http://localhost:3000",  # Development (app frontend)
     "http://localhost:5173",  # Development (id frontend)
+    "http://digidex.lan",  # Development via digidex.lan
+    "http://digidex.lan:10000",  # Development via digidex.lan (Traefik)
 ]
 CORS_ALLOW_CREDENTIALS = True
 MFA_SUPPORTED_TYPES = ["totp", "recovery_codes", "webauthn"]
