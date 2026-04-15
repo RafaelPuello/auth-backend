@@ -36,10 +36,6 @@ if DEBUG:
         'localhost',
         '127.0.0.1',
         '10.0.0.218',
-        'digidex.lan',
-        'api.digidex.lan',
-        'admin.digidex.lan',
-        '*.digidex.lan',
     ]
 
 
@@ -260,8 +256,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  # Development (id frontend)
     "http://127.0.0.1:3000",  # Development (app frontend, loopback)
     "http://127.0.0.1:5173",  # Development (id frontend, loopback)
-    "http://digidex.lan",  # Development via digidex.lan
-    "http://digidex.lan:10000",  # Development via digidex.lan (Traefik)
+    "http://10.0.0.218",  # Development via Pi IP
+    "http://10.0.0.218:10000",  # Development via Pi IP (Traefik)
 ]
 CORS_ALLOW_CREDENTIALS = True
 MFA_SUPPORTED_TYPES = ["totp", "recovery_codes", "webauthn"]
