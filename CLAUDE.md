@@ -53,8 +53,8 @@ python manage.py shell            # Django shell for manual testing
 ### API Structure
 
 **Ninja Router** (`config/api.py`)
-- `/api/me` - Get current authenticated user (requires JWT)
-- `/api/health` - Health check endpoint (no auth required)
+- `/id/api/me` - Get current authenticated user (requires JWT)
+- `/id/api/health` - Health check endpoint (no auth required)
 - Built with `django-ninja` and `django-ninja-jwt`
 
 **Django Allauth Headless URLs**
