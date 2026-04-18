@@ -29,87 +29,85 @@ SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DJANGO_DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost,testserver").split(",")
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost,testserver").split(
+    ","
+)
 
 if DEBUG:
     ALLOWED_HOSTS = [
-        'localhost',
-        '127.0.0.1',
-        '10.0.0.218',
+        "localhost",
+        "127.0.0.1",
+        "10.0.0.218",
     ]
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.staticfiles',
-    'django.contrib.sites',
-
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.staticfiles",
+    "django.contrib.sites",
     # CORS headers
-    'corsheaders',
-
+    "corsheaders",
     # Ninja API
-    'ninja_extra',
-
+    "ninja_extra",
     # Django Allauth
-    'allauth',
-    'allauth.account',
-    'allauth.headless',
-    'allauth.socialaccount',
-    'allauth.mfa',
+    "allauth",
+    "allauth.account",
+    "allauth.headless",
+    "allauth.socialaccount",
+    "allauth.mfa",
     # 'allauth.usersessions',  # Disabled - incompatible with signed_cookies sessions
-
-    'identity',
+    "identity",
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
+    "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
-    'corsheaders.middleware.CorsMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
     # CSRF middleware removed - JWT authentication is inherently CSRF-safe
     # (tokens sent in Authorization header, not cookies)
-    'identity.middleware.LoginFlushMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "identity.middleware.LoginFlushMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",
 ]
 
 AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
 SITE_ID = 1
 
-ROOT_URLCONF = 'config.urls'
+ROOT_URLCONF = "config.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'config.wsgi.application'
+WSGI_APPLICATION = "config.wsgi.application"
 
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.config(
+    "default": dj_database_url.config(
         conn_max_age=600,
         conn_health_checks=True,
     )
@@ -121,16 +119,16 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
@@ -138,9 +136,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "UTC"
 
 USE_I18N = True
 
@@ -150,11 +148,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = "static/"
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
-AUTH_USER_MODEL = 'identity.User'
+AUTH_USER_MODEL = "identity.User"
 
 # Security settings
 
@@ -176,16 +174,16 @@ SESSION_COOKIE_SECURE = not DEBUG
 
 # Allauth settings
 
-ACCOUNT_ADAPTER = 'identity.adapter.IdentityAdapter'
-ACCOUNT_LOGIN_METHODS = {'email'}
-ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
+ACCOUNT_ADAPTER = "identity.adapter.IdentityAdapter"
+ACCOUNT_LOGIN_METHODS = {"email"}
+ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
 
 # Email verification - mandatory for production readiness
 # In development, can be 'none' for easier testing
 # In production, should be 'mandatory' to ensure email validity
-ACCOUNT_EMAIL_VERIFICATION = 'none' if DEBUG else 'mandatory'
-#ACCOUNT_EMAIL_VERIFICATION_BY_CODE_ENABLED = True
-#ACCOUNT_EMAIL_UNKNOWN_ACCOUNTS = False
+ACCOUNT_EMAIL_VERIFICATION = "none" if DEBUG else "mandatory"
+# ACCOUNT_EMAIL_VERIFICATION_BY_CODE_ENABLED = True
+# ACCOUNT_EMAIL_UNKNOWN_ACCOUNTS = False
 
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 
@@ -193,11 +191,11 @@ ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 # Format: "X/Ym" means X attempts per Y minutes
 # Limits are per IP address
 ACCOUNT_RATE_LIMITS = {
-    'login_failed': '5/5m',        # 5 failed login attempts per 5 minutes
-    'manage_email': '5/1h',        # 5 email management operations per hour
-    'reauthenticate': '5/5m',      # 5 re-authentication attempts per 5 minutes
-    'reset_password': '3/15m',     # 3 password reset requests per 15 minutes
-    'change_password': '5/15m',    # 5 password changes per 15 minutes
+    "login_failed": "5/5m",  # 5 failed login attempts per 5 minutes
+    "manage_email": "5/1h",  # 5 email management operations per hour
+    "reauthenticate": "5/5m",  # 5 re-authentication attempts per 5 minutes
+    "reset_password": "3/15m",  # 3 password reset requests per 15 minutes
+    "change_password": "5/15m",  # 5 password changes per 15 minutes
 }
 
 HEADLESS_ONLY = True
@@ -215,12 +213,10 @@ HEADLESS_JWT_ALGORITHM = "RS256"
 # In development: uses local files in config/keys/
 # In production: loads from environment variables or secrets management
 _jwt_private_key_path = os.environ.get(
-    "JWT_PRIVATE_KEY_PATH",
-    BASE_DIR / "config" / "keys" / "jwt_private_key.pem"
+    "JWT_PRIVATE_KEY_PATH", BASE_DIR / "config" / "keys" / "jwt_private_key.pem"
 )
 _jwt_public_key_path = os.environ.get(
-    "JWT_PUBLIC_KEY_PATH",
-    BASE_DIR / "config" / "keys" / "jwt_public_key.pem"
+    "JWT_PUBLIC_KEY_PATH", BASE_DIR / "config" / "keys" / "jwt_public_key.pem"
 )
 
 HEADLESS_JWT_PRIVATE_KEY = Path(_jwt_private_key_path).read_text().strip()
@@ -244,7 +240,7 @@ CSRF_COOKIE_HTTPONLY = False  # Not using CSRF cookies for JWT auth
 # the session. The signed_cookies backend always returns False from exists(), breaking
 # token refresh and causing immediate logout after the access token expires.
 # LoginFlushMiddleware handles the 409 Conflict issue that arises with db-backed sessions.
-SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_ENGINE = "django.contrib.sessions.backends.db"
 
 # CORS configuration for API access
 CORS_ALLOWED_ORIGINS = [

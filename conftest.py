@@ -7,7 +7,7 @@ import os
 import django
 
 # Force test settings module BEFORE Django loads any settings
-os.environ['DJANGO_SETTINGS_MODULE'] = 'config.settings_test'
+os.environ["DJANGO_SETTINGS_MODULE"] = "config.settings_test"
 
 # Setup Django
 if not django.apps.apps.ready:
