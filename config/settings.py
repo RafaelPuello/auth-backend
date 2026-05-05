@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     "allauth.account",
     "allauth.headless",
     "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
     "allauth.mfa",
     # 'allauth.usersessions',  # Disabled - incompatible with signed_cookies sessions
     "identity",
@@ -259,6 +260,19 @@ CORS_ALLOW_CREDENTIALS = True
 MFA_SUPPORTED_TYPES = ["totp", "recovery_codes", "webauthn"]
 MFA_PASSKEY_LOGIN_ENABLED = True
 MFA_PASSKEY_SIGNUP_ENABLED = False
+
+# Social account providers configuration
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        "SCOPE": [
+            "profile",
+            "email",
+        ],
+        "AUTH_PARAMS": {
+            "access_type": "online",
+        },
+    }
+}
 
 # User sessions tracking disabled - using JWT tokens for auth state instead
 USERSESSIONS_TRACK_ACTIVITY = False
