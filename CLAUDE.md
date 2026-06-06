@@ -9,9 +9,12 @@ Django 6.0 identity/authentication service using django-allauth (headless API) f
 ### Authentication Model
 
 **JWT (RS256 Asymmetric)**
+
+See `.claude/rules/jwt-authentication-contract.md` for the complete token flow, structure, key management, frontend/backend patterns, and common mistakes.
+
+Key points:
 - Access tokens: 5 min, Refresh tokens: 14 days (configurable via `JWT_REFRESH_TOKEN_EXPIRES_IN`)
-- Tokens sent via `Authorization: Bearer <token>` header (no CSRF needed—JWT in headers is inherently CSRF-safe)
-- No session-based CSRF middleware (removed from stack)
+- Tokens sent via `Authorization: Bearer <token>` header
 - Custom User model (`identity.User`): email-based identifier, no username
 - MFA types: TOTP, recovery codes, WebAuthn/passkeys
 - Signups disabled (via `IdentityAdapter.is_open_for_signup()`)
